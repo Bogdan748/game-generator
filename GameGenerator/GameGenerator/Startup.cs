@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SignalRChat.Hubs;
 
 namespace GameGenerator
 {
@@ -39,6 +40,7 @@ namespace GameGenerator
             services.AddControllersWithViews();
 
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,6 +72,7 @@ namespace GameGenerator
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+                endpoints.MapHub<ChatHub>("/chatHub");
             });
         }
     }
