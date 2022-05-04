@@ -44,7 +44,6 @@ namespace GameGenerator.Data
                 .HasConstraintName("FK_Card_Game");
                 
                 
-                
         }
 
     }
