@@ -1,9 +1,8 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace GameGenerator.Models
 {
@@ -18,7 +17,7 @@ namespace GameGenerator.Models
         public virtual ICollection<OnGoingPlayers> OnGoingPlayers { get; set; }
         public virtual ICollection<OnGoingCards> Cards { get; set; }
 
-        public virtual Game Game { get; set; }
+        //public virtual GameViewModel Game { get; set; }
 
     }
 }

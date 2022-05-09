@@ -1,10 +1,7 @@
-﻿using GameGenerator.Data;
-using GameGenerator.Models;
+﻿
+using GameGenerator.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace GameGenerator.Controllers
@@ -19,7 +16,7 @@ namespace GameGenerator.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Card.ToListAsync());
+            return View(await _context.CardEntity.ToListAsync());
         }
     }
 }

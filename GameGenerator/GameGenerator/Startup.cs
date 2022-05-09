@@ -1,20 +1,18 @@
-using GameGenerator.Data;
+
 using GameGenerator.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using SignalRChat.Hubs;
+using GameGenerator.Infrastructure;
+using GameGenerator.Core.Repositories;
+using GameGenerator.Infrastructure.Repositories;
+using GameGenerator.Core.Services;
 
 namespace GameGenerator
 {
@@ -41,6 +39,11 @@ namespace GameGenerator
 
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddSignalR();
+
+            services.AddTransient<IGameRepository, GameRepository>();
+            services.AddTransient<IGameService, GameService>();
+            services.AddTransient<ICardRepository, CardRepository>();
+            services.AddTransient<ICardService, CardService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

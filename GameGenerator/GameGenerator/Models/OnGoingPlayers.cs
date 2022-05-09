@@ -20,6 +20,6 @@ namespace GameGenerator.Models
         [ForeignKey("OnGoingGames")]
         public int GameCod { get; set; }
 
-        public virtual OnGoingGames OnGoingGame { get; set; }
+        //public virtual OnGoingGames OnGoingGame { get; set; }
     }
 }

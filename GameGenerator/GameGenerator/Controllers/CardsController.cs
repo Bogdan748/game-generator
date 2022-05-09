@@ -1,28 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using GameGenerator.Data;
+using GameGenerator.Core.Services;
+using CardGenerator.Extensions;
 using GameGenerator.Models;
+using GameGenerator.Core.Exceptions;
 
-namespace GameGenerator.Controllers
+namespace CardGenerator.Controllers
 {
     public class CardsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICardService _cardService;
 
-        public CardsController(ApplicationDbContext context)
+        public CardsController(ICardService cardService)
         {
-            _context = context;
+            _cardService = cardService;
         }
 
         // GET: Cards
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Card.ToListAsync());
+            var cardEntries = await _cardService.GetAllAsync();
+            var viewModels = cardEntries.Select(c => c.ToViewModel()).ToList();
+            return View(viewModels);
         }
 
         // GET: Cards/Details/5
@@ -33,14 +34,14 @@ namespace GameGenerator.Controllers
                 return NotFound();
             }
 
-            var card = await _context.Card
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (card == null)
+            var cardEntry = await _cardService.GetByIdAsync(id.Value);
+
+            if (cardEntry == null)
             {
                 return NotFound();
             }
 
-            return View(card);
+            return View(cardEntry.ToViewModel());
         }
 
         // GET: Cards/Create
@@ -54,15 +55,14 @@ namespace GameGenerator.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,GameId,Text")] Card card)
+        public async Task<IActionResult> Create([Bind("Id,Name")] CardEntryViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(card);
-                await _context.SaveChangesAsync();
+                await _cardService.CreateAsync(viewModel.ToCardEntry());
                 return RedirectToAction(nameof(Index));
             }
-            return View(card);
+            return View(viewModel);
         }
 
         // GET: Cards/Edit/5
@@ -73,12 +73,12 @@ namespace GameGenerator.Controllers
                 return NotFound();
             }
 
-            var card = await _context.Card.FindAsync(id);
-            if (card == null)
+            var cardEntry = await _cardService.GetByIdAsync(id.Value);
+            if (cardEntry == null)
             {
                 return NotFound();
             }
-            return View(card);
+            return View(cardEntry.ToViewModel());
         }
 
         // POST: Cards/Edit/5
@@ -86,9 +86,9 @@ namespace GameGenerator.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,GameId,Text")] Card card)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] CardEntryViewModel viewModel)
         {
-            if (id != card.Id)
+            if (id != viewModel.Id)
             {
                 return NotFound();
             }
@@ -97,23 +97,22 @@ namespace GameGenerator.Controllers
             {
                 try
                 {
-                    _context.Update(card);
-                    await _context.SaveChangesAsync();
+                    await _cardService.UpdateAsync(id, viewModel.ToCardEntry());
+
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (EntryDoesNotExistException)
                 {
-                    if (!CardExists(card.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return NotFound();
                 }
+                catch (EntryUpdateErrorException)
+                {
+                    throw;
+                }
+
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(card);
+            return View(viewModel);
         }
 
         // GET: Cards/Delete/5
@@ -124,14 +123,14 @@ namespace GameGenerator.Controllers
                 return NotFound();
             }
 
-            var card = await _context.Card
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (card == null)
+            var cardEntry = await _cardService.GetByIdAsync(id.Value);
+
+            if (cardEntry == null)
             {
                 return NotFound();
             }
 
-            return View(card);
+            return View(cardEntry.ToViewModel());
         }
 
         // POST: Cards/Delete/5
@@ -139,15 +138,9 @@ namespace GameGenerator.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var card = await _context.Card.FindAsync(id);
-            _context.Card.Remove(card);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
-        private bool CardExists(int id)
-        {
-            return _context.Card.Any(e => e.Id == id);
+            await _cardService.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

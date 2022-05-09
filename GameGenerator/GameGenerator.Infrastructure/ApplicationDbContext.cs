@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using GameGenerator.Infrastructure.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using GameGenerator.Models;
 
-namespace GameGenerator.Data
+namespace GameGenerator.Infrastructure
 {
     public class ApplicationDbContext : IdentityDbContext
     {
@@ -13,37 +10,37 @@ namespace GameGenerator.Data
             : base(options)
         {
         }
-        public DbSet<GameGenerator.Models.Game> Game { get; set; }
-        public DbSet<GameGenerator.Models.Card> Card { get; set; }
+        public DbSet<GameEntity> GameEntity { get; set; }
+        public DbSet<CardEntity> CardEntity { get; set; }
 
         protected override void OnModelCreating(ModelBuilder moledBuilder)
         {
             base.OnModelCreating(moledBuilder);
 
-            moledBuilder.Entity<Game>()
+            moledBuilder.Entity<GameEntity>()
                 .ToTable("GameEntries")
                 .HasKey(cl => cl.Id);
 
-            moledBuilder.Entity<Game>()
+            moledBuilder.Entity<GameEntity>()
                 .Property(cl => cl.Name)
                 .IsRequired()
                 .HasMaxLength(200);
 
-            moledBuilder.Entity<Card>()
+            moledBuilder.Entity<CardEntity>()
                 .ToTable("CardEntries")
                 .HasKey(cl => cl.Id);
 
-            moledBuilder.Entity<Card>()
+            moledBuilder.Entity<CardEntity>()
                 .Property(cl => cl.Text)
                 .HasMaxLength(500);
 
-            moledBuilder.Entity<Card>()
+            moledBuilder.Entity<CardEntity>()
                 .HasOne(c => c.Game)
                 .WithMany(g => g.Cards)
-                .HasForeignKey(p=>p.GameId)
+                .HasForeignKey(p => p.GameId)
                 .HasConstraintName("FK_Card_Game");
-                
-                
+
+
         }
 
     }

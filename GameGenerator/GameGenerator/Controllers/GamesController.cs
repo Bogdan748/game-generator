@@ -1,28 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using GameGenerator.Data;
 using GameGenerator.Models;
+using GameGenerator.Core.Services;
+using GameGenerator.Extensions;
+using GameGenerator.Core.Exceptions;
 
 namespace GameGenerator.Controllers
 {
     public class GamesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IGameService _gameService;
 
-        public GamesController(ApplicationDbContext context)
+        public GamesController(IGameService gameService)
         {
-            _context = context;
+            _gameService = gameService;
         }
 
         // GET: Games
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Game.ToListAsync());
+            var gameEntries = await _gameService.GetAllAsync();
+            var viewModels = gameEntries.Select(c => c.ToViewModel()).ToList();
+            return View(viewModels);
         }
 
         // GET: Games/Details/5
@@ -33,14 +33,14 @@ namespace GameGenerator.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Game
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (game == null)
+            var gameEntry = await _gameService.GetByIdAsync(id.Value);
+                
+            if (gameEntry == null)
             {
                 return NotFound();
             }
 
-            return View(game);
+            return View(gameEntry.ToViewModel());
         }
 
         // GET: Games/Create
@@ -54,15 +54,14 @@ namespace GameGenerator.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Game game)
+        public async Task<IActionResult> Create([Bind("Id,Name")] GameEntryViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(game);
-                await _context.SaveChangesAsync();
+                await _gameService.CreateAsync(viewModel.ToGameEntry());
                 return RedirectToAction(nameof(Index));
             }
-            return View(game);
+            return View(viewModel);
         }
 
         // GET: Games/Edit/5
@@ -73,12 +72,12 @@ namespace GameGenerator.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Game.FindAsync(id);
-            if (game == null)
+            var gameEntry = await _gameService.GetByIdAsync(id.Value);
+            if (gameEntry == null)
             {
                 return NotFound();
             }
-            return View(game);
+            return View(gameEntry.ToViewModel());
         }
 
         // POST: Games/Edit/5
@@ -86,9 +85,9 @@ namespace GameGenerator.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Game game)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] GameEntryViewModel viewModel)
         {
-            if (id != game.Id)
+            if (id != viewModel.Id)
             {
                 return NotFound();
             }
@@ -97,23 +96,22 @@ namespace GameGenerator.Controllers
             {
                 try
                 {
-                    _context.Update(game);
-                    await _context.SaveChangesAsync();
+                    await _gameService.UpdateAsync(id, viewModel.ToGameEntry());
+
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (EntryDoesNotExistException)
                 {
-                    if (!GameExists(game.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return NotFound();
                 }
+                catch (EntryUpdateErrorException)
+                {
+                    throw;
+                }
+
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(game);
+            return View(viewModel);
         }
 
         // GET: Games/Delete/5
@@ -124,14 +122,14 @@ namespace GameGenerator.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Game
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (game == null)
+            var gameEntry = await _gameService.GetByIdAsync(id.Value);
+                
+            if (gameEntry == null)
             {
                 return NotFound();
             }
 
-            return View(game);
+            return View(gameEntry.ToViewModel());
         }
 
         // POST: Games/Delete/5
@@ -139,15 +137,9 @@ namespace GameGenerator.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var game = await _context.Game.FindAsync(id);
-            _context.Game.Remove(game);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
-        private bool GameExists(int id)
-        {
-            return _context.Game.Any(e => e.Id == id);
+            await _gameService.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace GameGenerator.Models
 {
-    public class Game
+    public class CardEntryViewModel
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-
-        public ICollection<Card> Cards { get; set; }
+        public string Text { get; set; }
+        public string CardType { get; set; }
+        public int GameId { get; set; }
     }
 }
