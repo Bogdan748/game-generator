@@ -1,5 +1,3 @@
-using System;
-
 namespace GameGenerator.Models
 {
     public class ErrorViewModel

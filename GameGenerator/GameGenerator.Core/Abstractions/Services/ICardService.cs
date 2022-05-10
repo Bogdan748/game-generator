@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GameGenerator.Core.Services
+namespace GameGenerator.Core.Abstractions.Services
 {
     public interface ICardService
     {

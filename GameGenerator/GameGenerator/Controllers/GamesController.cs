@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using GameGenerator.Models;
-using GameGenerator.Core.Services;
+using GameGenerator.Core.Abstractions.Services;
 using GameGenerator.Extensions;
 using GameGenerator.Core.Exceptions;
 

@@ -13,33 +13,11 @@ namespace GameGenerator.Infrastructure
         public DbSet<GameEntity> GameEntity { get; set; }
         public DbSet<CardEntity> CardEntity { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder moledBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(moledBuilder);
+            base.OnModelCreating(modelBuilder);
 
-            moledBuilder.Entity<GameEntity>()
-                .ToTable("GameEntries")
-                .HasKey(cl => cl.Id);
-
-            moledBuilder.Entity<GameEntity>()
-                .Property(cl => cl.Name)
-                .IsRequired()
-                .HasMaxLength(200);
-
-            moledBuilder.Entity<CardEntity>()
-                .ToTable("CardEntries")
-                .HasKey(cl => cl.Id);
-
-            moledBuilder.Entity<CardEntity>()
-                .Property(cl => cl.Text)
-                .HasMaxLength(500);
-
-            moledBuilder.Entity<CardEntity>()
-                .HasOne(c => c.Game)
-                .WithMany(g => g.Cards)
-                .HasForeignKey(p => p.GameId)
-                .HasConstraintName("FK_Card_Game");
-
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
         }
 

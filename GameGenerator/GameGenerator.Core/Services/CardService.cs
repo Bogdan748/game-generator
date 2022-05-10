@@ -1,13 +1,13 @@
 ﻿using GameGenerator.Core.Models;
-using GameGenerator.Core.Repositories;
+using GameGenerator.Core.Abstractions.Repositories;
 using System;
 using System.Collections.Generic;
-
 using System.Threading.Tasks;
+using GameGenerator.Core.Abstractions.Services;
 
 namespace GameGenerator.Core.Services
 {
-    public class CardService : ICardService
+    internal class CardService : ICardService
     {
         private readonly ICardRepository _repository;
 

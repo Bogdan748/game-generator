@@ -1,7 +1,4 @@
 ﻿
-using System.Collections.Generic;
-
-
 namespace GameGenerator.Models
 {
     public class GameEntryViewModel

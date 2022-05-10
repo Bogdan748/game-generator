@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GameGenerator.Core.Repositories
+namespace GameGenerator.Core.Abstractions.Repositories
 {
     public interface ICardRepository
     {

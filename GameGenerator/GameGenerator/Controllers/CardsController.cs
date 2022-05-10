@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using GameGenerator.Core.Services;
 using CardGenerator.Extensions;
 using GameGenerator.Models;
 using GameGenerator.Core.Exceptions;
+using GameGenerator.Core.Abstractions.Services;
 
 namespace CardGenerator.Controllers
 {

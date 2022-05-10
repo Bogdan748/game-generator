@@ -3,9 +3,9 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 
-namespace GameGenerator.Services
+namespace GameGenerator.Core.Services
 {
-    public class EmailSender : IEmailSender
+    internal class EmailSender : IEmailSender
     {
         public EmailSender()
         {

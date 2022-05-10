@@ -1,6 +1,6 @@
 ﻿using GameGenerator.Core.Exceptions;
 using GameGenerator.Core.Models;
-using GameGenerator.Core.Repositories;
+using GameGenerator.Core.Abstractions.Repositories;
 using GameGenerator.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
