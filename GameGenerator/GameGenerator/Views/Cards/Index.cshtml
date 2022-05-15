@@ -17,6 +17,9 @@
                 @Html.DisplayNameFor(model => model.GameId)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.CardType)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Text)
             </th>
             <th></th>
@@ -27,6 +30,9 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.GameId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CardType)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Text)

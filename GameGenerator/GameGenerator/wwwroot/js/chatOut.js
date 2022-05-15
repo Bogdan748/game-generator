@@ -5,8 +5,12 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 //Disable send button until connection is established
 document.getElementById("sendButton").disabled = true;
 
+
 connection.start().then(function () {
     document.getElementById("sendButton").disabled = false;
+    connection.invoke("AddConnection", "Dorel", "rinoceri").catch(function (err) {
+        return console.error(err.toString());
+    });
 }).catch(function (err) {
     return console.error(err.toString());
 });

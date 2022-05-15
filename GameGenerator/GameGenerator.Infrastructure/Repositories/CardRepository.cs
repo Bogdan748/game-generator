@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GameGenerator.Infrastructure.Entities;
 
 namespace GameGenerator.Infrastructure.Repositories
 {
@@ -23,7 +24,9 @@ namespace GameGenerator.Infrastructure.Repositories
 
         public async Task<List<CardEntry>> GetAllAsync()
         {
-            var cardEntities = await _applicationDbContext.CardEntity.ToListAsync();
+            var cardEntities = await _applicationDbContext.CardEntity
+                .Include(p=>p.Game)
+                .ToListAsync();
 
             return cardEntities.Select(entity => entity.ToCardEntry())
                                .ToList();
@@ -31,19 +34,29 @@ namespace GameGenerator.Infrastructure.Repositories
 
         public async Task<CardEntry> GetByIdAsync(int id)
         {
-            var cardEntity = await _applicationDbContext.CardEntity.FirstOrDefaultAsync(c => c.Id == id);
+            var cardEntity = await _applicationDbContext.CardEntity
+                .Include(p => p.Game)
+                .FirstOrDefaultAsync(c => c.Id == id);
 
             return cardEntity.ToCardEntry();
         }
 
         public async Task<int> CreateAsync(CardEntry cardEntry)
         {
-            var cardEntity = new Entities.CardEntity()
+            GameEntity gameEntity = await _applicationDbContext.GameEntity
+                .FirstOrDefaultAsync(c => c.Id == cardEntry.GameId);
+
+            if (gameEntity is null)
+            {
+                throw new ArgumentNullException(nameof(gameEntity));
+            }
+
+            var cardEntity = new CardEntity()
             {
                 Text = cardEntry.Text,
                 CardType= cardEntry.CardType,
-                GameId= cardEntry.GameId,
-                
+                Game=gameEntity
+
             };
 
             _applicationDbContext.Add(cardEntity);
@@ -58,9 +71,13 @@ namespace GameGenerator.Infrastructure.Repositories
 
             if (cardEntity is not null)
             {
+                GameEntity gameEntity = await _applicationDbContext.GameEntity
+                .FirstOrDefaultAsync(c => c.Id == updatedCardEntry.GameId);
+
+
                 cardEntity.Text = updatedCardEntry.Text;
-                cardEntity.Text = updatedCardEntry.Text;
-                cardEntity.GameId = updatedCardEntry.GameId;
+                cardEntity.CardType = updatedCardEntry.CardType;
+                cardEntity.Game = gameEntity;
 
                 try
                 {

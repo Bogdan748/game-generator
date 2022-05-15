@@ -22,7 +22,9 @@ namespace GameGenerator.Infrastructure.Repositories
 
         public async Task<List<GameEntry>> GetAllAsync()
         {
-            var gameEntities = await _applicationDbContext.GameEntity.ToListAsync();
+            var gameEntities = await _applicationDbContext
+                .GameEntity.Include(p=>p.Cards)
+                .ToListAsync();
 
             return gameEntities.Select(entity => entity.ToGameEntry())
                                .ToList();
@@ -30,7 +32,9 @@ namespace GameGenerator.Infrastructure.Repositories
 
         public async  Task<GameEntry> GetByIdAsync(int id)
         {
-            var gameEntity = await _applicationDbContext.GameEntity.FirstOrDefaultAsync(c => c.Id == id);
+            var gameEntity = await _applicationDbContext.GameEntity
+                .Include(p => p.Cards)
+                .FirstOrDefaultAsync(c => c.Id == id);
 
             return gameEntity.ToGameEntry();
         }

@@ -11,6 +11,6 @@ namespace GameGenerator.Infrastructure.Entities
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public ICollection<CardEntity> Cards { get; set; }
+        public List<CardEntity> Cards { get; set; }
     }
 }

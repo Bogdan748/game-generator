@@ -54,7 +54,7 @@ namespace CardGenerator.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] CardEntryViewModel viewModel)
+        public async Task<IActionResult> Create([Bind("Text,CardType,GameId")] CardEntryViewModel viewModel)
         {
             if (ModelState.IsValid)
             {

@@ -1,11 +1,7 @@
 ﻿using GameGenerator.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace GameGenerator.Infrastructure.EntityConfigurations
 {
@@ -24,8 +20,9 @@ namespace GameGenerator.Infrastructure.EntityConfigurations
             builder
                 .HasOne(c => c.Game)
                 .WithMany(g => g.Cards)
-                .HasForeignKey(p => p.GameId)
-                .HasConstraintName("FK_Card_Game");
+                .HasForeignKey("GameId")
+                .HasConstraintName("FK_Card_Game")
+                .IsRequired();
         }
     }
 }

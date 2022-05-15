@@ -11,6 +11,8 @@ connection.on("ReceiveMessage", function (user, message) {
     li.textContent = `${user} says ${message}`;
 });
 
+
+
 connection.start().catch(function (err) {
     return console.error(err.toString());
 });
