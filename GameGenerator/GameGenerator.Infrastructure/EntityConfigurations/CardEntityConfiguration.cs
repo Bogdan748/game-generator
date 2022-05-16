@@ -13,6 +13,8 @@ namespace GameGenerator.Infrastructure.EntityConfigurations
                 .ToTable("CardEntries")
                 .HasKey(cl => cl.Id);
 
+
+
             builder
                 .Property(cl => cl.Text)
                 .HasMaxLength(500);

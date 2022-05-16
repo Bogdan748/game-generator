@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using GameGenerator.Infrastructure.Entities.OnGoingGame;
+using System.Collections.Generic;
 
 
 namespace GameGenerator.Infrastructure.Entities.MapUsers
@@ -11,5 +12,10 @@ namespace GameGenerator.Infrastructure.Entities.MapUsers
 
         public string UserGroup { get; set; }
         public List<ConnectionEntity> Connections { get; set; }
+
+        public OnGoingGameEntity OnGoingGameEntity { get; set; }
+
+        public List<OnGoingCardsEntity> OnGoingCardsEntity { get; set; }
+
     }
 }

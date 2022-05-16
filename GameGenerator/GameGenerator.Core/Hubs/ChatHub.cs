@@ -60,9 +60,18 @@ namespace SignalRChat.Hubs
         }
 
 
-        public async Task SendMessage(string user, string message)
+        public async Task SendMessage(string userFrom,string group, string message)
         {
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
+            var users = await _userService.GetAllByGroupAsync(group);
+
+            foreach(var user in users)
+            {
+                foreach (var connection in user.Connections)
+                {
+                    await Clients.Client(connection.ConnectionID).SendAsync("ReceiveMessage", userFrom, message);
+                }
+            }
+            
         }
     }
 }

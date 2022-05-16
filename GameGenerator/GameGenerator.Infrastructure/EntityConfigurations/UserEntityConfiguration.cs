@@ -23,6 +23,16 @@ namespace GameGenerator.Infrastructure.EntityConfigurations
 
             builder
                   .HasKey(cl => cl.UserName);
+
+            builder
+                .HasOne(c => c.OnGoingGameEntity)
+                .WithMany(g => g.OnGoingUsers)
+                .OnDelete(DeleteBehavior.NoAction)
+                .HasForeignKey("OnGoingGameId")
+                .HasConstraintName("FK_User_OnGoingGame")
+                .IsRequired();
+                
+                
         }
     }
 }
