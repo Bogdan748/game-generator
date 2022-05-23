@@ -1,4 +1,5 @@
 ﻿using GameGenerator.Core.Models.MapUsers;
+using GameGenerator.Core.Models.OnGoingGame;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

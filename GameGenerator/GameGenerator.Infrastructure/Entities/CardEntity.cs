@@ -14,6 +14,5 @@ namespace GameGenerator.Infrastructure.Entities
         public string CardType { get; set; }
         public GameEntity Game { get; set; }
 
-        public List<OnGoingCardsEntity> OnGoingCardsEntity { get; set; }
     }
 }

@@ -1,9 +1,13 @@
 ﻿using GameGenerator.Core.Models.OnGoingGame;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace GameGenerator.Core.Abstractions.Repositories.OnGoingGame
+namespace GameGenerator.Core.Abstractions.Services.OnGoingGame
 {
-    public interface IOnGoingCardsRepository
+    public interface IOnGoingCardService
     {
         Task<int> CreateAsync(OnGoingCardEntry cardEntry);
 

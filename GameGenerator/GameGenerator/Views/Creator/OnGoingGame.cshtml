@@ -1,0 +1,33 @@
+﻿@model GameGenerator.Models.OnGoingGame.OnGoingGameViewModel
+
+@section Styles {
+    <link href="~/css/OnGoingGamePage.css" rel="stylesheet" type="text/css" />
+}
+
+@{
+    ViewData["Title"] = "OnGoingGame";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h1>Game Started</h1>
+<h2>Game Group Name: <span id="gameGroup">@Model.GameGroup</span></h2>
+<h2>User Name: <span id="userName">@User.Identity.Name</span></h2>
+
+
+<button id="getCards">Adauga carte</button>
+
+<div class="cards-container">
+
+    <div class="float-child cards-container-black">
+
+    </div>
+
+    <div class="float-child cards-container-white">
+
+    </div>
+
+</div>
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/creator.js"></script>

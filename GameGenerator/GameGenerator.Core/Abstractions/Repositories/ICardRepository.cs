@@ -16,5 +16,7 @@ namespace GameGenerator.Core.Abstractions.Repositories
 
         Task<int> DeleteAsync(int id);
 
+        Task<List<CardEntry>> GetAllAvailableForGameAsync(int gameId);
+
     }
 }

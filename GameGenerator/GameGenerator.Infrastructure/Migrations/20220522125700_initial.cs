@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GameGenerator.Infrastructure.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -173,16 +173,102 @@ namespace GameGenerator.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Text = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CardType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    GameId = table.Column<int>(type: "int", nullable: false)
+                    GameId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CardEntries", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Game_Card",
+                        column: x => x.GameId,
+                        principalTable: "GameEntries",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OnGoingGames",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GameGroup = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    GameId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OnGoingGames", x => x.Id);
+                    table.ForeignKey(
                         name: "FK_Card_Game",
                         column: x => x.GameId,
                         principalTable: "GameEntries",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserEntity",
+                columns: table => new
+                {
+                    UserName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    UserType = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    UserGroup = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    OnGoingGameId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserEntity", x => x.UserName);
+                    table.ForeignKey(
+                        name: "FK_User_OnGoingGame",
+                        column: x => x.OnGoingGameId,
+                        principalTable: "OnGoingGames",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ConnectionEntity",
+                columns: table => new
+                {
+                    ConnectionID = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    UserAgent = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Connected = table.Column<bool>(type: "bit", nullable: false),
+                    UserEntityUserName = table.Column<string>(type: "nvarchar(100)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConnectionEntity", x => x.ConnectionID);
+                    table.ForeignKey(
+                        name: "FK_Connection_User",
+                        column: x => x.UserEntityUserName,
+                        principalTable: "UserEntity",
+                        principalColumn: "UserName",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OnGoingCards",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CardId = table.Column<int>(type: "int", nullable: false),
+                    Round = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    OnGoingGameId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OnGoingCards", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OnGoing_Game",
+                        column: x => x.OnGoingGameId,
+                        principalTable: "OnGoingGames",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OnGoing_User",
+                        column: x => x.UserId,
+                        principalTable: "UserEntity",
+                        principalColumn: "UserName",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -229,6 +315,31 @@ namespace GameGenerator.Infrastructure.Migrations
                 name: "IX_CardEntries_GameId",
                 table: "CardEntries",
                 column: "GameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConnectionEntity_UserEntityUserName",
+                table: "ConnectionEntity",
+                column: "UserEntityUserName");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OnGoingCards_OnGoingGameId",
+                table: "OnGoingCards",
+                column: "OnGoingGameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OnGoingCards_UserId",
+                table: "OnGoingCards",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OnGoingGames_GameId",
+                table: "OnGoingGames",
+                column: "GameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserEntity_OnGoingGameId",
+                table: "UserEntity",
+                column: "OnGoingGameId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -252,10 +363,22 @@ namespace GameGenerator.Infrastructure.Migrations
                 name: "CardEntries");
 
             migrationBuilder.DropTable(
+                name: "ConnectionEntity");
+
+            migrationBuilder.DropTable(
+                name: "OnGoingCards");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "UserEntity");
+
+            migrationBuilder.DropTable(
+                name: "OnGoingGames");
 
             migrationBuilder.DropTable(
                 name: "GameEntries");

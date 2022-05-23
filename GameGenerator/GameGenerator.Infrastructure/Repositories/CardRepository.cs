@@ -40,6 +40,18 @@ namespace GameGenerator.Infrastructure.Repositories
             return cardEntity.ToCardEntry();
         }
 
+        public async Task<List<CardEntry>> GetAllAvailableForGameAsync(int gameId)
+        {
+            var cardEntities = await _applicationDbContext.CardEntity
+                .Include(p => p.Game)
+                .Where(c => c.Game.Id==gameId)
+                .Where(c => !_applicationDbContext.OnGoingCardsEntity.Any(o=> o.CardId==c.Id)) 
+                .ToListAsync();
+
+            return cardEntities.Select(entity => entity.ToCardEntry())
+                               .ToList();
+        }
+
         public async Task<int> CreateAsync(CardEntry cardEntry)
         {
             GameEntity gameEntity = await _applicationDbContext.GameEntity

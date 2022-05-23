@@ -1,0 +1,33 @@
+﻿@model GameGenerator.Models.MapUsers.UserViewModel
+
+
+@{
+    ViewData["Title"] = "Player";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h1>Index</h1>
+<p>Creator content</p>
+
+<div class="start-game-container">
+    <form asp-action="Playground">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="UserName" class="control-label"></label>
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+            <label asp-for="UserGroup" class="control-label"></label>
+            <input asp-for="UserGroup" class="form-control" />
+            <span asp-validation-for="UserGroup" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Connect" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,6 +1,7 @@
 ﻿using GameGenerator.Core.Abstractions.Repositories.MapUsers;
 using GameGenerator.Core.Abstractions.Services.MapUsers;
 using GameGenerator.Core.Models.MapUsers;
+using GameGenerator.Core.Models.OnGoingGame;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -49,6 +50,6 @@ namespace GameGenerator.Core.Services.MapUsers
             return affectedRows;
         }
 
- 
+       
     }
 }

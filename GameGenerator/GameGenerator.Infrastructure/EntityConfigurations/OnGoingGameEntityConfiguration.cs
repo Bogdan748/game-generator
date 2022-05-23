@@ -20,6 +20,13 @@ namespace GameGenerator.Infrastructure.EntityConfigurations
             builder
                 .Property(cl => cl.GameGroup)
                 .HasMaxLength(200);
+
+            builder
+                .HasOne(c => c.Game)
+                .WithMany(g => g.OnGoingGames)
+                .HasForeignKey("GameId")
+                .HasConstraintName("FK_Card_Game")
+                .IsRequired();
         }
     }
 }

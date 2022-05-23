@@ -1,0 +1,35 @@
+﻿@model GameGenerator.Models.OnGoingGame.OnGoingGameViewModel
+
+
+@{
+    ViewData["Title"] = "GameStarted";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h1>Game Started</h1>
+<h2>Game Group Name: <span id="gameGroup">@Model.GameGroup</span></h2>
+<p style="display:none" id="userName">@ViewBag.usrName</p>
+
+<form asp-action="OnGoingGame">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="GameGroup" class="control-label"></label>
+        <input asp-for="GameGroup" class="form-control" value="@Model.GameGroup" readonly="readonly"/>
+        <span asp-validation-for="GameGroup" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Everyone is connected!" class="btn btn-primary" />
+    </div>
+</form>
+
+
+<div class="connected--users">
+    <hr />
+    <ul id="users-list">
+        
+    </ul>
+</div>
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/creator.js"></script>

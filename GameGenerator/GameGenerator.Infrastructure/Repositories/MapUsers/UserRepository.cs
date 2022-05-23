@@ -1,5 +1,6 @@
 ﻿using GameGenerator.Core.Abstractions.Repositories.MapUsers;
 using GameGenerator.Core.Models.MapUsers;
+using GameGenerator.Core.Models.OnGoingGame;
 using GameGenerator.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -53,12 +54,16 @@ namespace GameGenerator.Infrastructure.Repositories.MapUsers
         {
             var userEntity = new Entities.MapUsers.UserEntity()
             {
-                UserName=userEntry.UserName,
-                UserType=userEntry.UserType,
-                UserGroup=userEntry.UserGroup
+                UserName = userEntry.UserName,
+                UserType = userEntry.UserType,
+                UserGroup = userEntry.UserGroup,
+                OnGoingGameEntity = _applicationDbContext.OnGoingGameEntity
+                                                .FirstOrDefault(o=>o.GameGroup==userEntry.UserGroup)
             };
 
-            _applicationDbContext.Add(userEntity);
+             _applicationDbContext.Add(userEntity);
+
+            
             int affectedRows = await _applicationDbContext.SaveChangesAsync();
 
             return affectedRows;

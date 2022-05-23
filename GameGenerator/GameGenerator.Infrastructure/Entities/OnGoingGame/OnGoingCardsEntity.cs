@@ -10,7 +10,7 @@ namespace GameGenerator.Infrastructure.Entities.OnGoingGame
     public class OnGoingCardsEntity
     {
         public int Id { get; set; }
-        public CardEntity Card { get; set; }
+        public int CardId { get; set; }
         public int Round { get; set; }
         public UserEntity User { get; set; }
         public OnGoingGameEntity OnGoingGame { get; set; }

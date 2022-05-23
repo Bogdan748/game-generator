@@ -5,6 +5,8 @@ using GameGenerator.Models;
 using GameGenerator.Core.Abstractions.Services;
 using GameGenerator.Extensions;
 using GameGenerator.Core.Exceptions;
+using GameGenerator.Core.Models;
+using System.Collections.Generic;
 
 namespace GameGenerator.Controllers
 {
@@ -20,9 +22,8 @@ namespace GameGenerator.Controllers
         // GET: Games
         public async Task<IActionResult> Index()
         {
-            var gameEntries = await _gameService.GetAllAsync();
-            var viewModels = gameEntries.Select(c => c.ToViewModel()).ToList();
-            return View(viewModels);
+            List<GameEntry> games = await _gameService.GetAllAsync();
+            return View(games.Select(a=>a.ToViewModel()));
         }
 
         // GET: Games/Details/5

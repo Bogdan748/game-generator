@@ -24,6 +24,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Player" asp-action="Index">Connect to a game</a>
+                        </li>
 
                         @if (User.Identity.IsAuthenticated)
                         {
@@ -38,6 +41,9 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Games" asp-action="Index">Games</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Creator" asp-action="OnGoingGame">Testare</a>
                             </li>
                         }
                     </ul>

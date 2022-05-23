@@ -1,4 +1,5 @@
-﻿using GameGenerator.Infrastructure.Entities.OnGoingGame;
+﻿using GameGenerator.Infrastructure.Entities;
+using GameGenerator.Infrastructure.Entities.OnGoingGame;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,14 +11,8 @@ namespace GameGenerator.Infrastructure.EntityConfigurations
         {
             builder
                 .ToTable("OnGoingCards")
-                .HasKey(cl => cl.Id); 
+                .HasKey(cl => cl.Id);
 
-            builder
-                .HasOne(c => c.Card)
-                .WithMany(c=>c.OnGoingCardsEntity)
-                .HasForeignKey("CardId")
-                .HasConstraintName("FK_OnGoing_Card")
-                .IsRequired();
 
             builder
                 .HasOne(c => c.User)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameGenerator.Infrastructure.Entities.OnGoingGame;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +13,7 @@ namespace GameGenerator.Infrastructure.Entities
         public string Name { get; set; }
 
         public List<CardEntity> Cards { get; set; }
+
+        public List<OnGoingGameEntity> OnGoingGames { get; set; }
     }
 }

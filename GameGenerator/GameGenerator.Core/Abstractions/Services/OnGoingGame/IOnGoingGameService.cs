@@ -1,11 +1,12 @@
 ﻿using GameGenerator.Core.Models.OnGoingGame;
 using System.Threading.Tasks;
 
-namespace GameGenerator.Core.Abstractions.Repositories.OnGoingGame
+namespace GameGenerator.Core.Abstractions.Services.OnGoingGame
 {
-    public interface IOnGoingGameRepository
+    public interface IOnGoingGameService
     {
         Task<OnGoingGameEntry> GetByIdAsync(int id);
+
         Task<OnGoingGameEntry> GetByGroupAsync(string groupName);
 
         Task<int> CreateAsync(OnGoingGameEntry onGoingGameEntry);

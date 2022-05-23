@@ -8,6 +8,8 @@ namespace GameGenerator.Infrastructure.Entities.OnGoingGame
     {
         public int Id { get; set; }
         public string GameGroup { get; set; }
+
+        public GameEntity Game { get;set; }
         public List<UserEntity> OnGoingUsers { get; set; }
         public List<OnGoingCardsEntity> OnGoingCards { get; set; }
     }

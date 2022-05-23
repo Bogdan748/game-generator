@@ -33,6 +33,16 @@ namespace GameGenerator.Core.Services
             return entry;
         }
 
+        public async Task<List<CardEntry>> GetAllAvailableForGameAsync(int gameId)
+        {
+            if (gameId < 0)
+            {
+                throw new ArgumentException($"Parameter {nameof(gameId)} must have a valid positive value");
+            }
+            List<CardEntry> entry = await _repository.GetAllAvailableForGameAsync(gameId);
+            return entry;
+        }
+
         public async Task<bool> CreateAsync(CardEntry cardEntry)
         {
             if (cardEntry is null)

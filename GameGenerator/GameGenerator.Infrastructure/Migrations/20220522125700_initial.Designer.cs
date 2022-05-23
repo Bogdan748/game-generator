@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameGenerator.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220516132347_OnGoingTablesV1")]
-    partial class OnGoingTablesV1
+    [Migration("20220522125700_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,7 +31,7 @@ namespace GameGenerator.Infrastructure.Migrations
                     b.Property<string>("CardType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("GameId")
+                    b.Property<int?>("GameId")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
@@ -132,8 +132,6 @@ namespace GameGenerator.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CardId");
-
                     b.HasIndex("OnGoingGameId");
 
                     b.HasIndex("UserId");
@@ -152,7 +150,12 @@ namespace GameGenerator.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("GameId");
 
                     b.ToTable("OnGoingGames");
                 });
@@ -362,9 +365,8 @@ namespace GameGenerator.Infrastructure.Migrations
                     b.HasOne("GameGenerator.Infrastructure.Entities.GameEntity", "Game")
                         .WithMany("Cards")
                         .HasForeignKey("GameId")
-                        .HasConstraintName("FK_Card_Game")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasConstraintName("FK_Game_Card")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Game");
                 });
@@ -395,13 +397,6 @@ namespace GameGenerator.Infrastructure.Migrations
 
             modelBuilder.Entity("GameGenerator.Infrastructure.Entities.OnGoingGame.OnGoingCardsEntity", b =>
                 {
-                    b.HasOne("GameGenerator.Infrastructure.Entities.CardEntity", "Card")
-                        .WithMany("OnGoingCardsEntity")
-                        .HasForeignKey("CardId")
-                        .HasConstraintName("FK_OnGoing_Card")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("GameGenerator.Infrastructure.Entities.OnGoingGame.OnGoingGameEntity", "OnGoingGame")
                         .WithMany("OnGoingCards")
                         .HasForeignKey("OnGoingGameId")
@@ -416,11 +411,21 @@ namespace GameGenerator.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Card");
-
                     b.Navigation("OnGoingGame");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("GameGenerator.Infrastructure.Entities.OnGoingGame.OnGoingGameEntity", b =>
+                {
+                    b.HasOne("GameGenerator.Infrastructure.Entities.GameEntity", "Game")
+                        .WithMany("OnGoingGames")
+                        .HasForeignKey("GameId")
+                        .HasConstraintName("FK_Card_Game")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -474,14 +479,11 @@ namespace GameGenerator.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("GameGenerator.Infrastructure.Entities.CardEntity", b =>
-                {
-                    b.Navigation("OnGoingCardsEntity");
-                });
-
             modelBuilder.Entity("GameGenerator.Infrastructure.Entities.GameEntity", b =>
                 {
                     b.Navigation("Cards");
+
+                    b.Navigation("OnGoingGames");
                 });
 
             modelBuilder.Entity("GameGenerator.Infrastructure.Entities.MapUsers.UserEntity", b =>
