@@ -38,8 +38,6 @@ document.getElementById("startRound").addEventListener("click", function (event)
     var gameName = document.getElementById("gameGroup").innerText;
     var gameRound = document.getElementById("gameRound").innerText;
 
-    console.log(gameName, gameRound);
-
     connection.invoke("StartRound", gameName, parseInt(gameRound)).catch(function (err) {
         return console.error(err.toString());
     });
@@ -49,8 +47,7 @@ document.getElementById("startRound").addEventListener("click", function (event)
 
 
 connection.on("AddCards", function (extractedCards, cardType) {
-    console.log(extractedCards);
-    console.log(`cards-container-${cardType}`);
+    
     extractedCards.forEach(el => {
 
         var elem = createCard(el.id, el.text)
@@ -58,6 +55,19 @@ connection.on("AddCards", function (extractedCards, cardType) {
     });
         
     
+});
+
+connection.on("AddAnswer", function (sentdCard, usernamme) {
+        var label;
+    
+        label = document.createElement("div");
+        label.className = 'answer-label';
+        var elem = createCard(sentdCard.id, sentdCard.text)
+
+        label.innerText = `${usernamme} answered:`
+        document.querySelector(`.cards-container-white`).appendChild(label)
+        document.querySelector(`.cards-container-white`).appendChild(elem);
+
 });
 
 
@@ -75,8 +85,6 @@ function createCard(cardId, cardText) {
     container.appendChild(text);
     element.appendChild(container);
 
-
-    console.log(element);
     return element;
 
 }

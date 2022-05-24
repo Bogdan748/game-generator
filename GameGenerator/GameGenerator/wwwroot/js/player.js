@@ -2,6 +2,7 @@
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
+//Adding connection
 connection.start().then(function () {
     var userName = document.getElementById("userName").innerText;
     var gameName = document.getElementById("gameGroup").innerText;
@@ -10,6 +11,61 @@ connection.start().then(function () {
     });
 }).catch(function (err) {
     return console.error(err.toString());
+});
+
+
+//Adding cards to view
+connection.on("AddCards", function (extractedCards, cardType) {
+    console.log(extractedCards);
+    console.log(`cards-container-${cardType}`);
+    extractedCards.forEach(el => {
+
+        var elem = createCard(el.id, el.text)
+        document.querySelector(`.cards-container-${cardType}`).appendChild(elem);
+    });
+
+
+});
+
+
+function createCard(cardId, cardText) {
+    var element = document.createElement("div");
+    element.className = "card";
+    element.id = cardId;
+
+    var container = document.createElement("div");
+    container.className = "container";
+
+    var text = document.createElement("h4");
+    text.innerText = cardText;
+
+    container.appendChild(text);
+    element.appendChild(container);
+
+    return element;
+
+}
+
+document.getElementById("sendAnswer").addEventListener("click", function (event) {
+
+    var cardId = document.querySelector('.answer-option').id;
+
+    var groupName = document.getElementById("gameGroup").innerText;
+    var userName = document.getElementById("userName").innerText;
+
+    connection.invoke("SendAnswer", parseInt(cardId), groupName, userName).catch(function (err) {
+        return console.error(err.toString());
+    });
+    event.preventDefault();
+});
+
+document.querySelector(".cards-container-white").addEventListener("click", function (event) {
+    if (event.target.classList.contains("card")) return;
+
+    document.querySelectorAll('.card').forEach(card => card.classList.remove("answer-option"));
+
+    event.target.closest('.card').classList.toggle('answer-option');
+
 });
 
 

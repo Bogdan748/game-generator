@@ -83,6 +83,7 @@ namespace GameGenerator.Infrastructure.Repositories.OnGoingGame
 
         public async Task<int> UpdateAsync(int id, OnGoingCardEntry updatedCardEntry)
         {
+
             var onGoingcardEntity = await _applicationDbContext.OnGoingCardsEntity.FirstOrDefaultAsync(c => c.Id == id);
 
             if (onGoingcardEntity is not null)

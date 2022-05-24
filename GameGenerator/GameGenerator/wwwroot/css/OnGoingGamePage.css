@@ -31,4 +31,12 @@
     float: left;
     padding: 20px;
     border: 2px solid #808080;
-}  
+}
+
+.answer-label {
+    font-weight: bold;
+}
+
+.answer-option {
+    background-color: chartreuse;
+}

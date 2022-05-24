@@ -1,5 +1,8 @@
 ﻿@model GameGenerator.Models.MapUsers.UserViewModel
 
+@section Styles {
+    <link href="~/css/OnGoingGamePage.css" rel="stylesheet" type="text/css" />
+}
 
 @{
     ViewData["Title"] = "Playground";
@@ -10,6 +13,20 @@
 <h1>Game Started</h1>
 <h2>Game Group Name: <span id="gameGroup">@Model.UserGroup</span></h2>
 <h2>User Name: <span id="userName">@Model.UserName</span></h2>
+
+<button id="sendAnswer">Send answer</button>
+
+<div class="cards-container">
+
+    <div class="float-child cards-container-black">
+
+    </div>
+
+    <div class="float-child cards-container-white">
+
+    </div>
+
+</div>
 
 
 <script src="~/js/signalr/dist/browser/signalr.js"></script>

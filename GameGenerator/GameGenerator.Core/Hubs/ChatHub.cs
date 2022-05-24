@@ -32,16 +32,27 @@ namespace SignalRChat.Hubs
         
         public async Task AddNewConnection(string name,string groupName)
         {
+            string type = "player";
+            UserEntry user = null;
 
-            UserEntry user = await _userService.GetByIdAsync(name);
-            
+            List<UserEntry> users = await _userService.GetAllByGroupAsync(groupName);
+
+            if (users.Count() == 0)
+            {
+                type = "admin";
+            }
+            else
+            {
+                user = users.FirstOrDefault(u => u.UserName==name);
+            }
 
             if (user is null)
             {
+
                 var newUser = new UserEntry
                 {
                     UserName=name,
-                    UserType= name=="admin" ? "admin" : "player", //ce face daca adauga playeru adaua nule de admin?
+                    UserType= type,
                     UserGroup=groupName
                 };
 
@@ -74,7 +85,7 @@ namespace SignalRChat.Hubs
 
             connection.Connected = false;
 
-            await _connectionService.UpdateAsync(Context.ConnectionId, connection);
+            await _connectionService.DeleteAsync(Context.ConnectionId);
 
             await base.OnDisconnectedAsync(ex);
         }
@@ -104,6 +115,9 @@ namespace SignalRChat.Hubs
 
             var playedCards = await _onGoingCardService.GetByGroupAsync(gameName);
             var users = await _userService.GetAllByGroupAsync(gameName);
+            
+            users = users.Where(u => u.UserType == "player").ToList();
+
             int nrOfCardsInPlay;
 
             foreach (var user in users)
@@ -154,6 +168,9 @@ namespace SignalRChat.Hubs
                 });
 
             }
+
+            //Round management?
+
         }
 
         public async Task GetCardsForEach(string userName,string groupName, string cardType, int nrOfCards)
@@ -186,7 +203,7 @@ namespace SignalRChat.Hubs
                 {
                     CardId = card.Id,
                     Round = currentGame.CurrentRound+1,
-                    UserName = Context.User.Identity.Name,
+                    UserName = userName,
                     OnGoingGameGroup = groupName
                 });
 
@@ -194,6 +211,26 @@ namespace SignalRChat.Hubs
 
         }
 
+        public async Task SendAnswer(int cardId, string groupName, string UserName)
+        {
+            var card = await _cardService.GetByIdAsync(cardId);
 
+            var users = await _userService.GetAllByGroupAsync(groupName);
+
+            var admin = users.FirstOrDefault(u => u.UserType == "admin");
+
+            foreach (var connection in admin.Connections.Where(c => c.Connected == true))
+            {
+                await Clients.Client(connection.ConnectionID).SendAsync("AddAnswer", card, UserName);
+            }
+
+
+            var onGoingCards = await _onGoingCardService.GetByGroupAsync(groupName);
+
+            var onGoingCard = onGoingCards.FirstOrDefault(o => o.CardId == cardId);
+            onGoingCard.UserName = admin.UserName;
+
+            await _onGoingCardService.UpdateAsync(onGoingCard.Id, onGoingCard);
+        }
     }
 }
