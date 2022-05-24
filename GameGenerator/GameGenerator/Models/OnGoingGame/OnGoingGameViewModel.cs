@@ -11,6 +11,7 @@ namespace GameGenerator.Models.OnGoingGame
         public string GameGroup { get; set; }
 
         public int GameId { get; set; }
+        public int CurrentRound { get; set; }
         public List<string> UserNames { get; set; }
         public List<int> OnGoingCardsIds { get; set; }
     }

@@ -37,7 +37,7 @@ namespace GameGenerator.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> StartGame([Bind("GameGroup","GameId")] OnGoingGameViewModel viewModel)
         {
-            
+            viewModel.CurrentRound = 1;
 
             if (ModelState.IsValid)
             {

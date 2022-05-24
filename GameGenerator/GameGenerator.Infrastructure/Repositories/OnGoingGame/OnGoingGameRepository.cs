@@ -26,7 +26,8 @@ namespace GameGenerator.Infrastructure.Repositories.OnGoingGame
             var gameEntity = new OnGoingGameEntity
             {
                 GameGroup = onGoingGameEntry.GameGroup,
-                Game = await _applicationDbContext.GameEntity.FirstOrDefaultAsync(a => a.Id == onGoingGameEntry.GameId)
+                Game = await _applicationDbContext.GameEntity.FirstOrDefaultAsync(a => a.Id == onGoingGameEntry.GameId),
+                CurrentRound=onGoingGameEntry.CurrentRound
             };
 
             _applicationDbContext.Add(gameEntity);
@@ -82,6 +83,7 @@ namespace GameGenerator.Infrastructure.Repositories.OnGoingGame
             {
                 onGoingGameEntity.GameGroup = updatedOnGoingGameEntry.GameGroup;
 
+                onGoingGameEntity.CurrentRound = updatedOnGoingGameEntry.CurrentRound;
 
                 try
                 {

@@ -48,7 +48,8 @@ namespace GameGenerator.Extensions
             {
                 Id = viewModel.Id,
                 GameGroup = viewModel.GameGroup,
-                GameId=viewModel.GameId
+                GameId=viewModel.GameId,
+                CurrentRound=viewModel.CurrentRound
             };
         }
 
@@ -63,7 +64,8 @@ namespace GameGenerator.Extensions
             {
                 Id = entry.Id,
                 GameGroup = entry.GameGroup,
-                GameId=entry.GameId
+                GameId=entry.GameId,
+                CurrentRound=entry.CurrentRound
                 
             };
         }

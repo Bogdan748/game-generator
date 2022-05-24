@@ -9,6 +9,7 @@ namespace GameGenerator.Core.Abstractions.Services.OnGoingGame
 {
     public interface IOnGoingCardService
     {
+        Task<List<OnGoingCardEntry>> GetByGroupAsync(string OnGoingGameGroup);
         Task<int> CreateAsync(OnGoingCardEntry cardEntry);
 
         Task<int> UpdateAsync(int id, OnGoingCardEntry updatedCardEntry);

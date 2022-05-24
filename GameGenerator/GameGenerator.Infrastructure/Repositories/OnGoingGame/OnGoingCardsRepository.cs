@@ -4,8 +4,11 @@ using GameGenerator.Core.Models.OnGoingGame;
 using GameGenerator.Infrastructure.Entities;
 using GameGenerator.Infrastructure.Entities.MapUsers;
 using GameGenerator.Infrastructure.Entities.OnGoingGame;
+using GameGenerator.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GameGenerator.Infrastructure.Repositories.OnGoingGame
@@ -17,6 +20,17 @@ namespace GameGenerator.Infrastructure.Repositories.OnGoingGame
         public OnGoingCardsRepository(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+        }
+
+        public async Task<List<OnGoingCardEntry>> GetByGroupAsync(string OnGoingGameGroup)
+        {
+            var onGoingCardEntities = await _applicationDbContext.OnGoingCardsEntity
+                .Include(c => c.User)
+                .Include(c => c.OnGoingGame)
+                .Where(c => c.OnGoingGame.GameGroup == OnGoingGameGroup)
+                .ToListAsync();
+                
+            return onGoingCardEntities.Select(o=>o.ToOnGoingCardEntry()).ToList();
         }
 
         public async Task<int> CreateAsync(OnGoingCardEntry onGoingcardEntry)

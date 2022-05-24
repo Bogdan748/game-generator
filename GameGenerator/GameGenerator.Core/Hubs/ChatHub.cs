@@ -98,18 +98,28 @@ namespace SignalRChat.Hubs
         }
 
 
-        public async Task SendMessage(string userFrom,string group, string message)
+        public async Task StartRound(string gameName, int gameRound)
         {
-            var users = await _userService.GetAllByGroupAsync(group);
+            await GetCardsForAll(gameName, "black", 1);
 
-            foreach(var user in users)
+            var playedCards = await _onGoingCardService.GetByGroupAsync(gameName);
+            var users = await _userService.GetAllByGroupAsync(gameName);
+            int nrOfCardsInPlay;
+
+            foreach (var user in users)
             {
-                foreach (var connection in user.Connections)
+                nrOfCardsInPlay = playedCards.Where(c => c.Round == gameRound && c.UserName==user.UserName).Count();
+
+                if (nrOfCardsInPlay < 5)
                 {
-                    await Clients.Client(connection.ConnectionID).SendAsync("ReceiveMessage", userFrom, message);
+                    await GetCardsForEach(user.UserName,gameName, "white", 5 - nrOfCardsInPlay);
                 }
             }
-            
+
+
+            var onGoingGame = await _onGoingGameService.GetByGroupAsync(gameName);
+            onGoingGame.CurrentRound += 1;
+            await _onGoingGameService.UpdateAsync(onGoingGame.Id, onGoingGame);
         }
 
 
@@ -146,7 +156,7 @@ namespace SignalRChat.Hubs
             }
         }
 
-        public async Task GetCardsForEach(string groupName, string cardType, int nrOfCards)
+        public async Task GetCardsForEach(string userName,string groupName, string cardType, int nrOfCards)
         {
 
             var currentGame = await _onGoingGameService.GetByGroupAsync(groupName);
@@ -156,34 +166,32 @@ namespace SignalRChat.Hubs
             List<CardEntry> extractedCards = null;
             
             var users = await _userService.GetAllByGroupAsync(groupName);
-            
-            foreach (var user in users.Where(u=>u.UserType!="admin"))
+
+            var user = users.FirstOrDefault(u => u.UserName == userName);
+
+            availableCards = await _cardService.GetAllAvailableForGameAsync(currentGame.GameId);
+
+            list = availableCards.Where(c => c.CardType == cardType).ToList();
+            extractedCards = list.OrderBy(arg => Guid.NewGuid()).Take(nrOfCards).ToList();
+
+            foreach (var connection in user.Connections.Where(c=>c.Connected==true))
             {
-                availableCards = await _cardService.GetAllAvailableForGameAsync(currentGame.GameId);
+                await Clients.Client(connection.ConnectionID).SendAsync("AddCards", extractedCards , cardType);
 
-                list = availableCards.Where(c => c.CardType == cardType).ToList();
-                extractedCards = list.OrderBy(arg => Guid.NewGuid()).Take(nrOfCards).ToList();
-
-                foreach (var connection in user.Connections.Where(c=>c.Connected==true))
-                {
-                    await Clients.Client(connection.ConnectionID).SendAsync("AddCards", extractedCards , cardType);
-
-                };
-
-                foreach (var card in extractedCards)
-                {
-                    await _onGoingCardService.CreateAsync(new OnGoingCardEntry()
-                    {
-                        CardId = card.Id,
-                        Round = 0,
-                        UserName = Context.User.Identity.Name,
-                        OnGoingGameGroup = groupName
-                    });
-
-                };
             };
 
-            
+            foreach (var card in extractedCards)
+            {
+                await _onGoingCardService.CreateAsync(new OnGoingCardEntry()
+                {
+                    CardId = card.Id,
+                    Round = currentGame.CurrentRound+1,
+                    UserName = Context.User.Identity.Name,
+                    OnGoingGameGroup = groupName
+                });
+
+            };
+
         }
 
 

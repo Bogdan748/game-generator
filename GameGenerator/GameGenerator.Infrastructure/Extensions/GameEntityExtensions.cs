@@ -42,6 +42,7 @@ namespace GameGenerator.Infrastructure.Extensions
                 GameGroup = entity.GameGroup,
                 UserNames = entity.OnGoingUsers.Select(u => u.UserName).ToList(),
                 OnGoingCardsIds = entity.OnGoingCards.Select(c => c.Id).ToList(),
+                CurrentRound=entity.CurrentRound,
                 GameId = entity.Game.Id
             };
         }
@@ -77,7 +78,24 @@ namespace GameGenerator.Infrastructure.Extensions
             };
         }
 
-        
+        public static OnGoingCardEntry ToOnGoingCardEntry(this OnGoingCardsEntity entity)
+        {
+            if (entity is null)
+            {
+                return null;
+            }
+
+            return new OnGoingCardEntry
+            {
+                Id = entity.Id,
+                CardId=entity.CardId,
+                Round=entity.Round,
+                UserName=entity.User.UserName,
+                OnGoingGameGroup=entity.OnGoingGame.GameGroup
+            };
+        }
+
+
         public static UserEntry ToUserEntry(this UserEntity entity)
         {
             if (entity is null)

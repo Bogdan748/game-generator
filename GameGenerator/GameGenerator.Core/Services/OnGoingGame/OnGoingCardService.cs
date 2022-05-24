@@ -18,6 +18,16 @@ namespace GameGenerator.Core.Services.OnGoingGame
             _repository = repository
                           ?? throw new ArgumentNullException(nameof(repository));
         }
+
+        public async Task<List<OnGoingCardEntry>> GetByGroupAsync(string OnGoingGameGroup)
+        {
+            if (OnGoingGameGroup is null)
+            {
+                throw new ArgumentException($"Parameter {nameof(OnGoingGameGroup)} must have a valid value");
+            }
+            List<OnGoingCardEntry> entry = await _repository.GetByGroupAsync(OnGoingGameGroup);
+            return entry;
+        }
         public async Task<int> CreateAsync(OnGoingCardEntry cardEntry)
         {
             if (cardEntry is null)
