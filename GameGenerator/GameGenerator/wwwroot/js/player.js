@@ -16,15 +16,14 @@ connection.start().then(function () {
 
 //Adding cards to view
 connection.on("AddCards", function (extractedCards, cardType) {
-    console.log(extractedCards);
-    console.log(`cards-container-${cardType}`);
+    
     extractedCards.forEach(el => {
 
         var elem = createCard(el.id, el.text)
         document.querySelector(`.cards-container-${cardType}`).appendChild(elem);
     });
 
-
+    document.querySelector('#sendAnswer').disabled = false;
 });
 
 
@@ -56,6 +55,10 @@ document.getElementById("sendAnswer").addEventListener("click", function (event)
     connection.invoke("SendAnswer", parseInt(cardId), groupName, userName).catch(function (err) {
         return console.error(err.toString());
     });
+
+    document.getElementById(cardId).remove();
+    document.querySelector('.cards-container-black .card').remove()
+    document.querySelector('#sendAnswer').disabled = true;
     event.preventDefault();
 });
 

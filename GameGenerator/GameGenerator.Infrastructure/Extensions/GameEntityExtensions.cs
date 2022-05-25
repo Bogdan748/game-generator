@@ -40,7 +40,7 @@ namespace GameGenerator.Infrastructure.Extensions
             {
                 Id = entity.Id,
                 GameGroup = entity.GameGroup,
-                UserNames = entity.OnGoingUsers.Select(u => u.UserName).ToList(),
+                UsersNamePoints = entity.OnGoingUsers.ToDictionary(x=>x.UserName,y=>y.Points),
                 OnGoingCardsIds = entity.OnGoingCards.Select(c => c.Id).ToList(),
                 CurrentRound=entity.CurrentRound,
                 GameId = entity.Game.Id
@@ -108,6 +108,7 @@ namespace GameGenerator.Infrastructure.Extensions
                 UserName=entity.UserName,
                 UserType=entity.UserType,
                 UserGroup=entity.UserGroup,
+                Points=entity.Points,
                 OnGoingGameEntry=entity.OnGoingGameEntity.ToOnGoingGameEntry(),
                 Connections= entity.Connections.Select(c => c.ToConnectionEntry()).ToList()
             };

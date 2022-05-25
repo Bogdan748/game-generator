@@ -16,5 +16,8 @@ namespace GameGenerator.Core.Abstractions.Services.MapUsers
         Task<int> CreateAsync(UserEntry userEntry);
 
         Task<int> DeleteAsync(string userName);
+
+
+        Task<int> UpdateAsync(string userName, UserEntry updatedUserEntry );
     }
 }

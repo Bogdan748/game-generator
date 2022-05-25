@@ -1,4 +1,5 @@
 ﻿using GameGenerator.Core.Abstractions.Repositories.MapUsers;
+using GameGenerator.Core.Exceptions;
 using GameGenerator.Core.Models.MapUsers;
 using GameGenerator.Core.Models.OnGoingGame;
 using GameGenerator.Infrastructure.Extensions;
@@ -82,6 +83,45 @@ namespace GameGenerator.Infrastructure.Repositories.MapUsers
             }
 
             return 0;
+        }
+
+
+        public async Task<int> UpdateAsync(string userName, UserEntry updatedUserEntry)
+        {
+            var userEntity = await _applicationDbContext.UserEntity.FirstOrDefaultAsync(c => c.UserName == userName);
+
+            if (userEntity is not null)
+            {
+
+                userEntity.UserType = updatedUserEntry.UserType;
+                userEntity.Points = updatedUserEntry.Points;
+
+                try
+                {
+                    _applicationDbContext.Update(userEntity);
+                    int affectedRows = await _applicationDbContext.SaveChangesAsync();
+
+                    return affectedRows;
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    userEntity = await _applicationDbContext.UserEntity.FirstOrDefaultAsync(c => c.UserName == userName);
+
+                    if (userEntity is null)
+                    {
+                        throw new EntryDoesNotExistException();
+                    }
+                    else
+                    {
+                        throw new EntryUpdateErrorException("Unexpected error while updating User entry", ex);
+                    }
+
+                }
+
+
+            }
+            return 0;
+
         }
     }
 }

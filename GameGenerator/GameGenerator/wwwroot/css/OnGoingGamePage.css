@@ -40,3 +40,10 @@
 .answer-option {
     background-color: chartreuse;
 }
+
+
+.row{
+    display: inherit;
+    margin:0;
+
+}

@@ -122,7 +122,7 @@ namespace SignalRChat.Hubs
 
             foreach (var user in users)
             {
-                nrOfCardsInPlay = playedCards.Where(c => c.Round == gameRound && c.UserName==user.UserName).Count();
+                nrOfCardsInPlay = playedCards.Where(c => c.Round >= 0 && c.UserName==user.UserName).Count();
 
                 if (nrOfCardsInPlay < 5)
                 {
@@ -162,14 +162,13 @@ namespace SignalRChat.Hubs
                 await _onGoingCardService.CreateAsync(new OnGoingCardEntry() 
                 {
                       CardId=card.Id,
-                      Round=0,
+                      Round=currentGame.CurrentRound,
                       UserName= Context.User.Identity.Name,
                       OnGoingGameGroup= groupName
                 });
 
             }
 
-            //Round management?
 
         }
 
@@ -202,7 +201,7 @@ namespace SignalRChat.Hubs
                 await _onGoingCardService.CreateAsync(new OnGoingCardEntry()
                 {
                     CardId = card.Id,
-                    Round = currentGame.CurrentRound+1,
+                    Round = currentGame.CurrentRound,
                     UserName = userName,
                     OnGoingGameGroup = groupName
                 });
@@ -228,9 +227,36 @@ namespace SignalRChat.Hubs
             var onGoingCards = await _onGoingCardService.GetByGroupAsync(groupName);
 
             var onGoingCard = onGoingCards.FirstOrDefault(o => o.CardId == cardId);
-            onGoingCard.UserName = admin.UserName;
+
+            onGoingCard.Round = -1;
 
             await _onGoingCardService.UpdateAsync(onGoingCard.Id, onGoingCard);
+        }
+
+
+        public async Task SendWinner(int cardId, string groupName)
+        {
+            var card = await _cardService.GetByIdAsync(cardId);
+
+            var onGoingCards = await _onGoingCardService.GetByGroupAsync(groupName);
+
+            var onGoingCard = onGoingCards.FirstOrDefault(o => o.CardId == cardId);
+
+            var users = await _userService.GetAllByGroupAsync(groupName);
+
+            var admin = users.FirstOrDefault(u => u.UserType == "admin");
+
+            var user = users.FirstOrDefault(u => u.UserName  == onGoingCard.UserName);
+
+            user.Points += 1;
+
+            await _userService.UpdateAsync(user.UserName, user);
+
+            foreach (var connection in admin.Connections.Where(c => c.Connected == true))
+            {
+                await Clients.Client(connection.ConnectionID).SendAsync("UpdatePoint", user.UserName, user.Points);
+            }
+
         }
     }
 }

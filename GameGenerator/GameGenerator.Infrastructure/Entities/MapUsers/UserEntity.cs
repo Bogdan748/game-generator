@@ -11,6 +11,8 @@ namespace GameGenerator.Infrastructure.Entities.MapUsers
         public string UserType { get; set; }
 
         public string UserGroup { get; set; }
+
+        public int Points { get; set; }
         public List<ConnectionEntity> Connections { get; set; }
 
         public OnGoingGameEntity OnGoingGameEntity { get; set; }

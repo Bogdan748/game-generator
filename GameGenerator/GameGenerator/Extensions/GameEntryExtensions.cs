@@ -3,7 +3,7 @@ using GameGenerator.Core.Models.OnGoingGame;
 using GameGenerator.Models;
 using GameGenerator.Models.OnGoingGame;
 using System;
-
+using System.Collections.Generic;
 
 namespace GameGenerator.Extensions
 {
@@ -65,7 +65,8 @@ namespace GameGenerator.Extensions
                 Id = entry.Id,
                 GameGroup = entry.GameGroup,
                 GameId=entry.GameId,
-                CurrentRound=entry.CurrentRound
+                CurrentRound=entry.CurrentRound,
+                UsersNamePoints = entry.UsersNamePoints
                 
             };
         }

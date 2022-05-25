@@ -16,18 +16,44 @@
 
 
 <button id="startRound">Start round <span id="gameRound">@Model.CurrentRound</span></button>
+<button id="sendWinner">Send Winner</button>
+<div class="admin-panel">
+    <div class="cards-container">
 
-<div class="cards-container">
+        <div class="float-child cards-container-black">
 
-    <div class="float-child cards-container-black">
+        </div>
+
+        <div class="float-child cards-container-white">
+
+        </div>
 
     </div>
 
-    <div class="float-child cards-container-white">
+    <div class="users-container">
+        <table class="users" GridLines="Both" HorizontalAlign="Center" CellSpacing="3" CellPadding="3">
+            <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.UsersNamePoints)
+                {
+                    <tr class="row" id="@item.Key">
+                        <td>@item.Key</td>
+                        <td>@item.Value</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 
     </div>
 
 </div>
+
+
 
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/creator.js"></script>

@@ -10,5 +10,7 @@ namespace GameGenerator.Models.MapUsers
         public string UserName { get; set; }
         public string UserType { get; set; }
         public string UserGroup { get; set; }
+
+        public int Points { get; set; }
     }
 }

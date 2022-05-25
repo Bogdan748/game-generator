@@ -30,7 +30,7 @@ namespace GameGenerator.Core.Services
                 Credentials = new NetworkCredential(fromMail, fromPassword),
                 EnableSsl = true,
             };
-            smtpClient.Send(message);
+            await smtpClient.SendMailAsync(message);
         }
     }
 }

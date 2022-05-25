@@ -8,6 +8,7 @@ namespace GameGenerator.Core.Models.MapUsers
         public string UserType { get; set; }
         public string UserGroup { get; set; }
 
+        public int Points { get; set; }
         public OnGoingGame.OnGoingGameEntry OnGoingGameEntry { get; set; }
         public List<ConnectionEntry> Connections { get; set; }
     }

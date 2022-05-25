@@ -44,6 +44,17 @@ namespace GameGenerator.Core.Services.MapUsers
             return affectedRows;
         }
 
+
+        public async Task<int> UpdateAsync(string userName, UserEntry updatedUserEntry)
+        {
+            if (updatedUserEntry is null)
+            {
+                throw new ArgumentException(nameof(updatedUserEntry));
+            }
+            int affectedRows = await _repository.UpdateAsync(userName,updatedUserEntry);
+            return affectedRows;
+        }
+
         public async Task<int> DeleteAsync(string userName)
         {
             int affectedRows = await _repository.DeleteAsync(userName);
