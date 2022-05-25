@@ -72,3 +72,14 @@ document.querySelector(".cards-container-white").addEventListener("click", funct
 });
 
 
+//Ending game
+connection.on("EndGame", function () {
+
+    document.querySelectorAll('.card').forEach(el => el.remove());
+
+    document.querySelector('button').disabled = true;
+
+    alert("Game has ended. Thank you for playing!")
+});
+
+

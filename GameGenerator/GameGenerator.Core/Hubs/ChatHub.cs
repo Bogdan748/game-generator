@@ -258,5 +258,29 @@ namespace SignalRChat.Hubs
             }
 
         }
+
+        public async Task EndGame(string groupName)
+        {
+            
+
+            var users = await _userService.GetAllByGroupAsync(groupName);
+
+            foreach (var user in users.Where(u=>u.UserType=="player"))
+            {
+                foreach (var connection in user.Connections.Where(c => c.Connected == true))
+                {
+                    await Clients.Client(connection.ConnectionID).SendAsync("EndGame");
+                }
+            }
+
+            foreach(var user in users)
+            {
+                await _userService.DeleteAsync(user.UserName);
+            }
+
+            var currentGame = await _onGoingGameService.GetByGroupAsync(groupName);
+
+            await _onGoingGameService.DeleteAsync(currentGame.Id);
+        }
     }
 }

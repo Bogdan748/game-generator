@@ -10,6 +10,7 @@ using GameGenerator.Infrastructure;
 using GameGenerator.Models;
 using GameGenerator.Models.OnGoingGame;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,15 +22,18 @@ namespace GameGenerator.Controllers
     {
         private readonly IOnGoingGameService _onGoingGameService;
         private readonly IUserService _usersService;
+        private readonly IGameService _gameService;
 
-        public CreatorController(IOnGoingGameService onGoingGameService, IUserService usersService)
+        public CreatorController(IOnGoingGameService onGoingGameService, IUserService usersService, IGameService gameService)
         {
             _onGoingGameService = onGoingGameService;
             _usersService = usersService;
+            _gameService = gameService;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            
+            var games = await _gameService.GetAllAsync();
+            ViewBag.listOfGames = games;
             return View();
         }
 
@@ -38,6 +42,7 @@ namespace GameGenerator.Controllers
         public async Task<IActionResult> StartGame([Bind("GameGroup","GameId")] OnGoingGameViewModel viewModel)
         {
             viewModel.CurrentRound = 1;
+            
 
             if (ModelState.IsValid)
             {
@@ -54,7 +59,11 @@ namespace GameGenerator.Controllers
 
                 await _usersService.CreateAsync(user);
 
+               
+
                 ViewBag.usrName = HttpContext.User.Identity.Name;
+                
+
                 return View(viewModel);
             }
             return RedirectToAction(nameof(Index));
@@ -70,11 +79,20 @@ namespace GameGenerator.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult OnGoingGame([Bind("GameGroup")] OnGoingGameViewModel viewModel)
+        public async Task<IActionResult> OnGoingGame([Bind("GameGroup")] OnGoingGameViewModel viewModel)
         {
-            
+            OnGoingGameEntry onGoingGame = await _onGoingGameService.GetByGroupAsync(viewModel.GameGroup);
 
-            return View(viewModel);
+            return View(onGoingGame.ToOnGoingGameViewModel());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EndGame([Bind("GameGroup")] OnGoingGameViewModel viewModel)
+        {
+            OnGoingGameEntry onGoingGame = await _onGoingGameService.GetByGroupAsync(viewModel.GameGroup);
+
+            return View(onGoingGame.ToOnGoingGameViewModel());
         }
     }
 }

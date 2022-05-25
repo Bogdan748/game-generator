@@ -51,6 +51,20 @@
 
     </div>
 
+    <div class="end-game">
+        <form asp-action="EndGame">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" style="display:none">
+                <label asp-for="GameGroup" class="control-label"></label>
+                <input asp-for="GameGroup" class="form-control" value="@Model.GameGroup" readonly="readonly" />
+                <span asp-validation-for="GameGroup" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="End Game!" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+
 </div>
 
 

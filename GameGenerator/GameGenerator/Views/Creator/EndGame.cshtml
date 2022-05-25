@@ -1,0 +1,17 @@
+﻿@model GameGenerator.Models.OnGoingGame.OnGoingGameViewModel
+
+
+@{
+    ViewData["Title"] = "EndGame";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h1>Game ended</h1>
+
+<h1>The winner of <span id="gameGroup">@Model.GameGroup</span> is @Model.UsersNamePoints.Aggregate((x, y) => x.Value > y.Value ? x : y).Key with @Model.UsersNamePoints.Values.Max() points</h1>
+
+
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/endgame.js"></script>

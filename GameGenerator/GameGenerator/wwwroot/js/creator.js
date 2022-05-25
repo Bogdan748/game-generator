@@ -14,14 +14,6 @@ connection.start().then(function () {
 });
 
 
-connection.on("AddConnectedUser", function (name) {
-    var li = document.createElement("li");
-    document.getElementById("users-list").appendChild(li);
-    li.textContent = `${name} has connected`;
-});
-
-
-
 ///Start Round 
 //1. get one black card
 //2. get 5 white for each

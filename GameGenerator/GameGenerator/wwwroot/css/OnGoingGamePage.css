@@ -47,3 +47,10 @@
     margin:0;
 
 }
+
+
+.admin-panel{
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+}
