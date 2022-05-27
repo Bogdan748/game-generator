@@ -11,10 +11,12 @@ namespace CardGenerator.Controllers
     public class CardsController : Controller
     {
         private readonly ICardService _cardService;
+        private readonly IGameService _gameService;
 
-        public CardsController(ICardService cardService)
+        public CardsController(ICardService cardService, IGameService gameService)
         {
             _cardService = cardService;
+            _gameService = gameService;
         }
 
         // GET: Cards
@@ -44,8 +46,11 @@ namespace CardGenerator.Controllers
         }
 
         // GET: Cards/Create
-        public IActionResult Create()
+        public async  Task<IActionResult> Create()
         {
+            var games = await _gameService.GetAllAsync();
+            ViewBag.listOfGames = games;
+            
             return View();
         }
 

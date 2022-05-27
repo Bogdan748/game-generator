@@ -69,7 +69,7 @@ namespace GameGenerator.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> OnGoingGame()
+        public async Task<IActionResult> OnGoingGame()  //TESTE
         {
             OnGoingGameEntry viewModel = await _onGoingGameService.GetByIdAsync(2);
 
