@@ -1,4 +1,4 @@
-# game-generator
+# App Name: game-generator
 
 The project simulates a Card Against Humanity kind of game. The steps for the game are:
   1. A person creates an account (the admin) and makes a group of games, each of which have a group of playing cards. The cards contain either a statement or o response to the statement.
@@ -8,3 +8,11 @@ The project simulates a Card Against Humanity kind of game. The steps for the ga
   5. The admin receives answers and can decide a winner of the round, then they can start a new round in which a new random statement is sent to everyone, and the players receive a random card with an answer.
   6. Each round, a winner gets assigned a point
   7. The admin can end the game at any point, in which case the admin will receive a message regarding the winner and the players will receive a message regarding the end of the game. 
+
+Technologies used:
+1. ASP.NET MVC
+2. ASP.NET SignalR
+3. Entity Framework
+4. JavaScript/CSS/HTML
+
+Created By Andrieș Bogdan
