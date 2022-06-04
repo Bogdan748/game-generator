@@ -40,7 +40,7 @@ namespace GameGenerator.Infrastructure.Extensions
             {
                 Id = entity.Id,
                 GameGroup = entity.GameGroup,
-                UsersNamePoints = entity.OnGoingUsers.ToDictionary(x=>x.UserName,y=>y.Points),
+                UsersNamePoints = entity.OnGoingUsers.Where(x=>x.UserType!="admin").ToDictionary(x=>x.UserName,y=>y.Points),
                 OnGoingCardsIds = entity.OnGoingCards.Select(c => c.Id).ToList(),
                 CurrentRound=entity.CurrentRound,
                 GameId = entity.Game.Id
